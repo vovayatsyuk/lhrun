@@ -1,0 +1,26 @@
+{
+  "name": "lh",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "lighthouses": "./index.js"
+  },
+  "keywords": [],
+  "author": "Vova Yatsyuk",
+  "license": "MIT",
+  "dependencies": {
+    "@colors/colors": "^1.6.0",
+    "cli-spinners": "^3.0.0",
+    "cli-table3": "^0.6.5",
+    "commander": "^13.1.0",
+    "ejs": "^3.1.10",
+    "lighthouse": "^10.0.0",
+    "log-update": "^6.0.0",
+    "terminal-link": "^4.0.0"
+  }
+}
