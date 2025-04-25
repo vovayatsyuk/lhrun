@@ -95,7 +95,7 @@ async function lighthouses(url, number, options) {
     return;
   }
 
-  // spinner.show();
+  spinner.show();
 
   const chrome = await chromeLauncher.launch({
     startingUrl: url,
