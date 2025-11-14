@@ -67,7 +67,6 @@ const audits = [
   { id: 'mainthread-work-breakdown', title: 'Mainthread Work', ranges: [[0, 3.4], [3.4, 5.8], [5.8, 99]] },
   { id: 'server-response-time', title: 'Server Response Time', ranges: [[0, 100], [100, 250], [250, 999]] },
   { id: 'network-server-latency', title: 'TTFB', ranges: [[0, 800], [801, 1800], [1801, 9999]] },
-  { id: 'scripts', title: 'Scripts', ranges: [[0, 500], [501, 1000], [1001, 9999]], skip: true },
 ];
 
 async function lighthouses(url, number, options) {
