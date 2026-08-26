@@ -36,10 +36,10 @@
     </style>
   </head>
 <body>
-  <% scores.score.forEach((score, i) => { %>
+  <% for (let i = 0; i < runs; i++) { %>
     <section>
       <h3>Test #<%= i + 1 %></h3>
       <iframe src="<%= i + 1 %>.html"></iframe>
     </section>
-  <% }) %>
+  <% } %>
 </body>
