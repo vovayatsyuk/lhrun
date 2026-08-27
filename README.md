@@ -12,12 +12,14 @@ between runs and between machines.
 ## Install
 
 ```bash
-npm install
-npm install -g .
+npm install -g lhrun
 ```
 
-That puts an `lhrun` command on your PATH. Without the global install, use
-`node index.js` in place of `lhrun` below.
+That puts an `lhrun` command on your PATH. Requires Node 22.19 or newer, which is what
+Lighthouse 13 itself needs.
+
+To run from a clone instead, `npm install` and then use `node index.js` in place of `lhrun`
+below.
 
 ## Usage
 

@@ -2,15 +2,35 @@
   "name": "lhrun",
   "version": "1.0.0",
   "description": "Run Lighthouse against a URL several times and compare the numbers in the terminal",
-  "main": "index.js",
   "type": "module",
-  "scripts": {
-    "format": "prettier --write ."
-  },
   "bin": {
     "lhrun": "./index.js"
   },
-  "keywords": [],
+  "files": [
+    "index.js",
+    "src",
+    "report.ejs"
+  ],
+  "engines": {
+    "node": ">=22.19"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vovayatsyuk/lhrun.git"
+  },
+  "bugs": {
+    "url": "https://github.com/vovayatsyuk/lhrun/issues"
+  },
+  "homepage": "https://github.com/vovayatsyuk/lhrun#readme",
+  "scripts": {
+    "format": "prettier --write ."
+  },
+  "keywords": [
+    "lighthouse",
+    "performance",
+    "web-vitals",
+    "cli"
+  ],
   "author": "Vova Yatsyuk",
   "license": "MIT",
   "dependencies": {
