@@ -7,7 +7,7 @@ to a site actually made it faster.
 Each run is throttled (simulated slow network, CPU slowdown) to keep results comparable
 between runs and between machines.
 
-<img src="./screenshot.png" width="1058" alt="Three runs of a page compared side by side in the terminal"/>
+<img src="https://raw.githubusercontent.com/vovayatsyuk/lhrun/main/screenshot.png" width="1058" alt="Three runs of a page compared side by side in the terminal"/>
 
 ## Install
 
