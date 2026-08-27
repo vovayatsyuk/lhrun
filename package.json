@@ -1,5 +1,5 @@
 {
-  "name": "lighthouses",
+  "name": "lhrun",
   "version": "1.0.0",
   "description": "Run Lighthouse against a URL several times and compare the numbers in the terminal",
   "main": "index.js",
@@ -8,7 +8,7 @@
     "format": "prettier --write ."
   },
   "bin": {
-    "lighthouses": "./index.js"
+    "lhrun": "./index.js"
   },
   "keywords": [],
   "author": "Vova Yatsyuk",
