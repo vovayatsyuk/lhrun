@@ -5,6 +5,7 @@ import { metrics, resources, toNumber } from './audits.js';
 
 const EMPTY = colors.gray('·');
 const PADDING = 2; // cli-table3 pads each cell with a space on both sides
+const SEAMLESS = { mid: '', 'left-mid': '', 'mid-mid': '', 'right-mid': '' };
 
 // Both tables are drawn at full size before the first run, so widths are fixed up front —
 // otherwise the layout shifts every time a value arrives.
@@ -42,13 +43,16 @@ function scoresTable(runs, values, path) {
 
   metrics.forEach((metric, i) => {
     const recorded = values[i].filter(isPresent);
-
-    table.push([
+    const row = [
       metric.title,
       ...times(runs, run => colorize(values[i][run], metric)),
       colorize(average(recorded), metric),
       legends[i],
-    ]);
+    ];
+
+    // Every row draws the rule above itself. The first one keeps it — that is the line under
+    // the header — and the rest drop it, leaving the footer to draw its own.
+    table.push(i === 0 ? row : row.map(content => ({ content, chars: SEAMLESS })));
   });
 
   table.push([
@@ -65,7 +69,7 @@ function resourcesTable(sizes) {
   const table = new Table({
     head: ['Resources', ...resources.map(resource => resource.label)],
     colWidths: [rowLabelWidth + PADDING, ...resources.map(() => resourceWidth + PADDING)],
-    style: { head: [] },
+    style: { head: [], compact: true },
   });
 
   table.push(['Size, KB', ...resources.map((_, i) => cell(sizes?.[i]?.size))]);
