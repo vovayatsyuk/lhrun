@@ -1,7 +1,7 @@
 #! /usr/bin/env node
 
 import { Command } from 'commander';
-import fs from 'fs';
+import * as report from './src/report.js';
 import { run } from './src/runner.js';
 
 const program = new Command();
@@ -24,6 +24,6 @@ program
 program
   .command('clear')
   .description('Remove saved reports')
-  .action(() => fs.rmSync('reports', { recursive: true, force: true }));
+  .action(() => report.clear());
 
 program.parse();

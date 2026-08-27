@@ -1,4 +1,4 @@
-# Lighthouses
+# Lighthouse Runner
 
 Runs Lighthouse against a URL several times and shows the numbers side by side, so a
 single unlucky run does not get mistaken for a trend. Built for checking whether a change
@@ -7,7 +7,7 @@ to a site actually made it faster.
 Each run is throttled (simulated slow network, CPU slowdown) to keep results comparable
 between runs and between machines.
 
-<img src="./screenshot.png" width="836" alt="Three runs of a page compared side by side in the terminal, each metric coloured green, yellow or red against its thresholds"/>
+<img src="./screenshot.png" width="836" alt="Three runs of a page compared side by side in the terminal"/>
 
 ## Install
 
@@ -16,19 +16,19 @@ npm install
 npm install -g .
 ```
 
-That puts a `lighthouses` command on your PATH. Without the global install, use
-`node index.js` in place of `lighthouses` below.
+That puts an `lhrun` command on your PATH. Without the global install, use
+`node index.js` in place of `lhrun` below.
 
 ## Usage
 
 ```bash
-lighthouses https://example.com
+lhrun https://example.com
 ```
 
-Runs three tests and prints the table. Pass a different count as the second argument:
+Runs five tests and prints the table. Pass a different count as the second argument:
 
 ```bash
-lighthouses https://example.com 5
+lhrun https://example.com 10
 ```
 
 The full table appears immediately with empty cells, and fills in as each run finishes. If
@@ -52,14 +52,15 @@ numbers taken with the flag against numbers taken without it.
 
 ### Reports
 
-HTML reports are written to `reports/` **in the directory you ran the command from** — one
-file per run, plus an `index.html` that shows them side by side. The index is rewritten
-after every run, so it is readable while the tests are still going.
+HTML reports always go to the same place, no matter where you run the command from:
+`~/.local/share/lhrun/reports` (or `$XDG_DATA_HOME/lhrun/reports` if that is set). Each
+report is one file per run, plus an `index.html` that shows them side by side. The index is
+rewritten after every run, so it is readable while the tests are still going.
 
 Remove them all with:
 
 ```bash
-lighthouses clear
+lhrun clear
 ```
 
 ## Adding a metric
