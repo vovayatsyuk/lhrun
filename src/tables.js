@@ -28,8 +28,51 @@ export function render({ runs, values, resources: sizes, path }) {
   return [scoresTable(runs, values, path), resourcesTable(sizes)].join('\n');
 }
 
-export function failureMessage() {
-  return colors.red('Unable to perform the test');
+export function failureMessage(failures = []) {
+  const lines = [colors.red('Unable to perform the test')];
+
+  if (failures.length) {
+    lines.push('', 'Every attempt failed while reading the report:', '', ...explain(failures));
+  }
+
+  return lines.join('\n');
+}
+
+// Printed under a partial table: runs that had to be retried are worth explaining even when
+// enough of them eventually succeeded.
+export function retryNotice(failures = []) {
+  if (!failures.length) {
+    return '';
+  }
+
+  const attempts = failures.length === 1 ? 'attempt was' : 'attempts were';
+
+  return [
+    '',
+    colors.yellow(`${failures.length} ${attempts} discarded:`),
+    '',
+    ...explain(failures),
+  ].join('\n');
+}
+
+// Identical failures are the norm — a renamed audit misses on every attempt — so they are
+// grouped instead of repeated.
+function explain(failures) {
+  const groups = new Map();
+
+  for (const failure of failures) {
+    const key = `${failure.title}\n${failure.reason}`;
+    const group = groups.get(key) ?? { ...failure, times: 0 };
+
+    group.times++;
+    groups.set(key, group);
+  }
+
+  return [...groups.values()].flatMap(({ title, reason, detail, times }) => [
+    `  ${colors.yellow(title)}${times > 1 ? colors.gray(` (\u00d7${times})`) : ''}`,
+    `    ${reason}`,
+    ...(detail && detail !== reason ? [colors.gray(`    ${detail}`)] : []),
+  ]);
 }
 
 function scoresTable(runs, values, path) {

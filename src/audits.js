@@ -11,7 +11,9 @@ export const metrics = [
   },
   {
     title: 'DOM Size',
-    read: lhr => lhr.audits['dom-size'].displayValue.replace(' elements', '').replace(',', ''),
+    read: lhr =>
+      lhr.audits['dom-size-insight'].details.items.find(i => i.statistic === 'Total elements').value
+        .value,
     good: [0, 800],
     ok: [801, 1400],
     poor: [1401, 9999],
