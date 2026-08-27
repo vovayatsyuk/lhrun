@@ -8,7 +8,7 @@ const program = new Command();
 
 program
   .argument('<url>', 'URL to test')
-  .argument('[runs]', 'Number of iterations', 3)
+  .argument('[runs]', 'Number of iterations', 5)
   .option('--save', 'Keep the report instead of overwriting reports/latest')
   .option('--cpu <number>', 'CPU slowdown multiplier', 5.2)
   .option('--rand', 'Give each run a unique ?rand= value, to measure past page caches')
