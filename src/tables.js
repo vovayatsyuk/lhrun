@@ -9,12 +9,17 @@ const SEAMLESS = { mid: '', 'left-mid': '', 'mid-mid': '', 'right-mid': '' };
 
 // Both tables are drawn at full size before the first run, so widths are fixed up front —
 // otherwise the layout shifts every time a value arrives.
+const rangeWidths = [0, 1, 2].map(i => widest(metrics.map(metric => ranges(metric)[i])));
 const legends = metrics.map(metric => {
   const [good, ok, poor] = ranges(metric);
 
-  return [colors.green(good), colors.yellow(ok), colors.red(poor)].join(' ');
+  return [
+    colors.green(good.padEnd(rangeWidths[0])),
+    colors.yellow(ok.padEnd(rangeWidths[1])),
+    colors.red(poor),
+  ].join(' ');
 });
-const legendWidth = widest(metrics.map(metric => ranges(metric).join(' ')));
+const legendWidth = rangeWidths.reduce((total, width) => total + width, 0) + 2;
 const titleWidth = widest(metrics.map(metric => metric.title));
 const rowLabelWidth = widest(['Resources', 'Size, KB', 'Count']);
 const resourceWidth = Math.max(widest(resources.map(resource => resource.label)), 6); // fits 5 digits
