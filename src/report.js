@@ -26,17 +26,16 @@ export function clear() {
   fs.rmSync(root, { recursive: true, force: true });
 }
 
-// index.html sizes each iframe to its full report height, so all runs scroll together with the page.
-// file:// frames are cross-origin to the parent, hence postMessage instead of reading the height directly.
-const reportHeight = `<script>
+const reportHeight = `<style>
+  html { overflow-y: hidden; }
+  .lh-max-viewport.lh-max-viewport { min-height: 0; }
+</style>
+<script>
   new ResizeObserver(() => {
-    parent.postMessage({ lhrunHeight: document.body.scrollHeight }, '*');
+    parent.postMessage({ lhrunHeight: Math.ceil(document.body.getBoundingClientRect().height) }, '*');
   }).observe(document.body);
 </script>`;
 
-// Mirrors expanded audits and filter toggles to the other runs. States, not clicks, so frames can't drift
-// out of phase. Elements are matched by the nearest stable id (audit/category ids; generated ones have digits)
-// plus a tag+first-class path (later classes are state modifiers), since runs can have a different set of audits.
 const syncState = `<script>
   {
     const kind = (el) => el.tagName + '.' + (el.classList[0] ?? '');
