@@ -28,62 +28,61 @@ export async function run(url, runs, { save, cpu, rand, diff }) {
 
   const folder = report.createFolder(url, save);
   const state = { runs, values: metrics.map(() => []), previous, resources: null, path: folder };
-  const chrome = await chromeLauncher.launch({ startingUrl: url, chromeFlags });
 
   spinner.show(render(state));
 
-  try {
-    let completed = 0;
-    let retries = 0;
-    const failures = [];
+  let completed = 0;
+  let retries = 0;
+  const failures = [];
 
-    while (completed < runs) {
-      const target = rand ? withRand(url) : url;
-      let result;
+  while (completed < runs) {
+    const target = rand ? withRand(url) : url;
+    // A fresh Chrome per run gets a new temp profile, so no cookies or storage carry over.
+    const chrome = await chromeLauncher.launch({ chromeFlags });
+    let result;
 
-      try {
-        result = await lighthouse(target, options(chrome.port, cpu));
-      } catch (error) {
-        spinner.clear();
-        console.log(crashMessage(error));
-        return;
-      }
-
-      const { lhr, report: html } = result;
-
-      if (lhr.runtimeError) {
-        spinner.clear();
-        console.log(runtimeErrorMessage(lhr.runtimeError));
-        return;
-      }
-
-      const { values, resources: sizes, failure } = readRun(lhr);
-
-      if (failure) {
-        failures.push(failure);
-
-        if (++retries > MAX_RETRIES) {
-          break;
-        }
-        continue;
-      }
-
-      retries = 0;
-      values.forEach((value, i) => (state.values[i][completed] = value));
-      state.resources = sizes;
-      completed++;
-
-      report.saveRun(folder, completed, html);
-      report.saveIndex(folder, completed);
-      report.saveResults(folder, { values: state.values, resources: sizes });
-      spinner.show(render(state));
+    try {
+      result = await lighthouse(target, options(chrome.port, cpu));
+    } catch (error) {
+      spinner.clear();
+      console.log(crashMessage(error));
+      return;
+    } finally {
+      await chrome.kill();
     }
 
-    spinner.clear();
-    console.log(completed ? render(state) + retryNotice(failures) : failureMessage(failures));
-  } finally {
-    await chrome.kill();
+    const { lhr, report: html } = result;
+
+    if (lhr.runtimeError) {
+      spinner.clear();
+      console.log(runtimeErrorMessage(lhr.runtimeError));
+      return;
+    }
+
+    const { values, resources: sizes, failure } = readRun(lhr);
+
+    if (failure) {
+      failures.push(failure);
+
+      if (++retries > MAX_RETRIES) {
+        break;
+      }
+      continue;
+    }
+
+    retries = 0;
+    values.forEach((value, i) => (state.values[i][completed] = value));
+    state.resources = sizes;
+    completed++;
+
+    report.saveRun(folder, completed, html);
+    report.saveIndex(folder, completed);
+    report.saveResults(folder, { values: state.values, resources: sizes });
+    spinner.show(render(state));
   }
+
+  spinner.clear();
+  console.log(completed ? render(state) + retryNotice(failures) : failureMessage(failures));
 }
 
 // The warm-up keeps the plain URL, so only the measured runs are cache misses.
