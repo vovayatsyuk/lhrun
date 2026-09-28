@@ -4,7 +4,7 @@
   "description": "Run Lighthouse against a URL several times and compare the numbers in the terminal",
   "type": "module",
   "bin": {
-    "lhrun": "./index.js"
+    "lhrun": "index.js"
   },
   "files": [
     "index.js",

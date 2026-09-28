@@ -14,15 +14,17 @@ program
   .version(version)
   .argument('<url>', 'URL to test')
   .argument('[runs]', 'Number of iterations', 5)
-  .option('--save', 'Keep the report instead of overwriting reports/latest')
+  .option('--save [name]', 'Save test result using persistent name')
   .option('--cpu <number>', 'CPU slowdown multiplier', 5.2)
   .option('--rand', 'Give each run a unique ?rand= value, to measure past page caches')
+  .option('--diff <name>', 'Show the difference with a previously saved result')
   .description('Run lighthouse tests')
   .action((url, runs, options) =>
     run(url, Math.max(1, Number(runs) || 1), {
       save: options.save,
       cpu: Number(options.cpu) || 5.2,
       rand: options.rand,
+      diff: options.diff,
     })
   );
 

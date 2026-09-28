@@ -13,13 +13,31 @@ const dataHome =
 
 const root = path.join(dataHome, 'lhrun', 'reports');
 
+// `save` is true for a timestamped folder, or a name to keep (and overwrite) under.
 export function createFolder(url, save) {
-  const folder = path.join(root, save ? name(url) : 'latest');
+  const folder = path.join(root, save === true ? name(url) : save ? path.basename(save) : 'latest');
 
   fs.rmSync(folder, { recursive: true, force: true });
   fs.mkdirSync(folder, { recursive: true });
 
   return folder;
+}
+
+export function saveResults(folder, results) {
+  fs.writeFileSync(path.join(folder, 'results.json'), JSON.stringify(results));
+}
+
+export function loadResults(folder) {
+  try {
+    const results = JSON.parse(
+      fs.readFileSync(path.join(root, path.basename(folder), 'results.json'), 'utf8')
+    );
+
+    // ponytail: early results.json held only the metric values; drop once those are gone.
+    return Array.isArray(results) ? { values: results } : results;
+  } catch {
+    return null;
+  }
 }
 
 export function clear() {

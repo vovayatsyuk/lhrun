@@ -1,10 +1,12 @@
 // Add a metric by adding a row. `read` is called inside a try — a throw, undefined or NaN
 // marks the run as failed and retries it, so no defensive checks are needed here.
 // `good` / `ok` / `poor` are inclusive ranges: they colour the value and print as the legend.
+// `decimals` rounds the average (default 2).
 export const metrics = [
   {
     title: 'Performance',
     read: lhr => Math.round(lhr.categories.performance.score * 100),
+    decimals: 0,
     good: [90, 100],
     ok: [50, 89],
     poor: [0, 49],
@@ -14,6 +16,7 @@ export const metrics = [
     read: lhr =>
       lhr.audits['dom-size-insight'].details.items.find(i => i.statistic === 'Total elements').value
         .value,
+    decimals: 0,
     good: [0, 800],
     ok: [801, 1400],
     poor: [1401, 9999],
@@ -35,6 +38,7 @@ export const metrics = [
   {
     title: 'Total Blocking Time',
     read: lhr => lhr.audits['total-blocking-time'].displayValue,
+    decimals: 0,
     good: [0, 200],
     ok: [200, 600],
     poor: [600, 999],
@@ -70,6 +74,7 @@ export const metrics = [
   {
     title: 'Server Response Time',
     read: lhr => lhr.audits['server-response-time'].displayValue.replace('Root document took ', ''),
+    decimals: 0,
     good: [0, 100],
     ok: [100, 250],
     poor: [250, 999],
@@ -77,6 +82,7 @@ export const metrics = [
   {
     title: 'TTFB',
     read: lhr => lhr.audits['network-server-latency'].displayValue,
+    decimals: 0,
     good: [0, 800],
     ok: [801, 1800],
     poor: [1801, 9999],

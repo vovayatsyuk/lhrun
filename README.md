@@ -43,7 +43,8 @@ column, and the last row links to the full Lighthouse HTML reports.
 
 | Option           | Default | What it does                                                                                                                                                            |
 | ---------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `--save`         | off     | Keep this report in its own timestamped folder. Without it, the report overwrites `reports/latest`.                                                                     |
+| `--save [name]`  | off     | Save test result under persistent name. Without a name the folder is timestamped; with one, `--save=name` overwrites that folder each time.                             |
+| `--diff <name>`  | off     | Compare values with previously saved result.                                                                                                                            |
 | `--cpu <number>` | `5.2`   | CPU slowdown multiplier. Lower it on a slow machine, raise it to exaggerate main-thread cost.                                                                           |
 | `--rand`         | off     | Give every run a unique `?rand=` value, so each one is fetched past the full page cache. The warm-up still requests the plain URL, so PHP and the database stay primed. |
 

@@ -10,7 +10,14 @@ import { failureMessage, render, retryNotice } from './tables.js';
 
 const MAX_RETRIES = 2;
 
-export async function run(url, runs, { save, cpu, rand }) {
+export async function run(url, runs, { save, cpu, rand, diff }) {
+  const previous = diff ? report.loadResults(diff) : null;
+
+  if (diff && !previous) {
+    console.log(colors.red(`No saved results named "${diff}"`));
+    return;
+  }
+
   const warmed = await warmUp(url);
 
   if (!warmed.ok) {
@@ -20,7 +27,7 @@ export async function run(url, runs, { save, cpu, rand }) {
   }
 
   const folder = report.createFolder(url, save);
-  const state = { runs, values: metrics.map(() => []), resources: null, path: folder };
+  const state = { runs, values: metrics.map(() => []), previous, resources: null, path: folder };
   const chrome = await chromeLauncher.launch({ startingUrl: url, chromeFlags });
 
   spinner.show(render(state));
@@ -68,6 +75,7 @@ export async function run(url, runs, { save, cpu, rand }) {
 
       report.saveRun(folder, completed, html);
       report.saveIndex(folder, completed);
+      report.saveResults(folder, { values: state.values, resources: sizes });
       spinner.show(render(state));
     }
 
