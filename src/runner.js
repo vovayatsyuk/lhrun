@@ -98,7 +98,7 @@ function options(port, cpu) {
   return {
     ...lighthouseOptions,
     port,
-    throttling: { ...lighthouseOptions.throttling, cpuSlowdownMultiplier: cpu },
+    throttling: { cpuSlowdownMultiplier: cpu },
   };
 }
 

@@ -108,11 +108,6 @@ export const lighthouseOptions = {
   output: 'html',
   throttlingMethod: 'simulate',
   onlyCategories: ['performance'],
-  throttling: {
-    requestLatencyMs: 150,
-    downloadThroughputKbps: 1000,
-    uploadThroughputKbps: 750,
-  },
 };
 
 export function toNumber(value) {
