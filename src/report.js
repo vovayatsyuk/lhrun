@@ -13,14 +13,27 @@ const dataHome =
 
 const root = path.join(dataHome, 'lhrun', 'reports');
 
-// `save` is true for a timestamped folder, or a name to keep (and overwrite) under.
-export function createFolder(url, save) {
-  const folder = path.join(root, save === true ? name(url) : save ? path.basename(save) : 'latest');
+const latest = path.join(root, 'latest');
 
-  fs.rmSync(folder, { recursive: true, force: true });
-  fs.mkdirSync(folder, { recursive: true });
+export function createFolder() {
+  fs.rmSync(latest, { recursive: true, force: true });
+  fs.mkdirSync(latest, { recursive: true });
 
-  return folder;
+  return latest;
+}
+
+// Copies the last run under `name` (or one made from its URL), leaving `latest` intact.
+export function saveLast(name) {
+  const url = loadResults('latest')?.url;
+  if (!fs.existsSync(latest) || !(name || url)) return null;
+
+  const target = path.join(root, path.basename(name || slug(url)));
+  if (target === latest) return latest;
+
+  fs.rmSync(target, { recursive: true, force: true });
+  fs.cpSync(latest, target, { recursive: true, preserveTimestamps: true });
+
+  return target;
 }
 
 export function saveResults(folder, results) {
@@ -37,6 +50,25 @@ export function loadResults(folder) {
     return Array.isArray(results) ? { values: results } : results;
   } catch {
     return null;
+  }
+}
+
+// Saved results, newest first.
+export function list() {
+  try {
+    return fs
+      .readdirSync(root, { withFileTypes: true })
+      .filter(entry => entry.isDirectory())
+      .map(entry => ({
+        name: entry.name,
+        date: fs.statSync(path.join(root, entry.name, 'results.json'), { throwIfNoEntry: false })
+          ?.mtime,
+        url: loadResults(entry.name)?.url,
+      }))
+      .filter(entry => entry.date)
+      .sort((a, b) => b.date - a.date);
+  } catch {
+    return [];
   }
 }
 
@@ -105,9 +137,6 @@ export function saveIndex(folder, runs) {
   );
 }
 
-function name(url) {
-  return [
-    new Date().toISOString().replace(/\..*/g, ''),
-    url.replace(/(https?|[\W]+)/g, '-').replace(/(^-{1,}|-{1,}$)/g, ''),
-  ].join('-');
+function slug(url) {
+  return url.replace(/(https?|[\W]+)/g, '-').replace(/(^-+|-+$)/g, '');
 }

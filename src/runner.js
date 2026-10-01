@@ -10,7 +10,7 @@ import { failureMessage, render, retryNotice } from './tables.js';
 
 const MAX_RETRIES = 2;
 
-export async function run(url, runs, { save, cpu, rand, diff }) {
+export async function run(url, runs, { cpu, rand, diff }) {
   const previous = diff ? report.loadResults(diff) : null;
 
   if (diff && !previous) {
@@ -26,7 +26,7 @@ export async function run(url, runs, { save, cpu, rand, diff }) {
     return;
   }
 
-  const folder = report.createFolder(url, save);
+  const folder = report.createFolder();
   const state = { runs, values: metrics.map(() => []), previous, resources: null, path: folder };
 
   spinner.show(render(state));
@@ -77,12 +77,14 @@ export async function run(url, runs, { save, cpu, rand, diff }) {
 
     report.saveRun(folder, completed, html);
     report.saveIndex(folder, completed);
-    report.saveResults(folder, { values: state.values, resources: sizes });
+    report.saveResults(folder, { url, values: state.values, resources: sizes });
     spinner.show(render(state));
   }
 
   spinner.clear();
   console.log(completed ? render(state) + retryNotice(failures) : failureMessage(failures));
+
+  return completed;
 }
 
 // The warm-up keeps the plain URL, so only the measured runs are cache misses.

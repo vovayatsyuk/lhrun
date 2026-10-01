@@ -27,24 +27,19 @@ below.
 lhrun https://example.com
 ```
 
-Runs five tests and prints the table. Pass a different count as the second argument:
+You can also compare current run with a previously saved results:
 
 ```bash
-lhrun https://example.com 10
+lhrun https://example.com --save=uniquename
+lhrun https://example.com --diff=uniquename
 ```
-
-The full table appears immediately with empty cells, and fills in as each run finishes. If
-the terminal is too short to hold it, the live view is cropped at the top while it runs; the
-complete table is printed once at the end.
-Values are coloured green / yellow / red against the thresholds shown in the Legend
-column, and the last row links to the full Lighthouse HTML reports.
 
 ### Options
 
 | Option           | Default | What it does                                                                                                                                                            |
 | ---------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `--save [name]`  | off     | Save test result under persistent name. Without a name the folder is timestamped; with one, `--save=name` overwrites that folder each time.                             |
-| `--diff <name>`  | off     | Compare values with previously saved result.                                                                                                                            |
+| `--save [name]`  | off     | Save the result when the run finishes, same as `lhrun save [name]` afterwards.                                                                                          |
+| `--diff [name]`  | off     | Compare values with a saved result. Without a name, pick one from the list.                                                                                             |
 | `--cpu <number>` | `5.2`   | CPU slowdown multiplier. Lower it on a slow machine, raise it to exaggerate main-thread cost.                                                                           |
 | `--rand`         | off     | Give every run a unique `?rand=` value, so each one is fetched past the full page cache. The warm-up still requests the plain URL, so PHP and the database stay primed. |
 
